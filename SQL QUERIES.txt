@@ -1,0 +1,39 @@
+
+
+*************************** SQL QUERIES *****************************
+
+use librarymgmnt;
+show tables;
+select * from user_entity_rest_api;
+select * from user_entities;
+select * from user_entities where last_name= "khan";
+select * from user_entities limit 5 offset 15;
+select first_name from user_entities where age= 30;
+
+select * from user_entities order by age desc
+limit 2,1;
+select last_name from user_entities where age=35;
+
+select  max(age)  as AGE, first_name from user_entities;
+select  min(age) as UserAge from  user_entities;
+select  *from   user_entities where last_name Not  like 'khan%'; 
+select * from user_entities where last_name  not  in('khan');
+select count(last_name) as lastName from user_entities;
+select count(id)  from user_entities 
+INSERT INTO `librarymgmnt`.`user_entities`
+ (`id`, `age`, `first_name`, `is_active`, `last_name`)
+ VALUES ('10', '30', 'amir', '0', 'khan');
+select upper(first_name) from user_entities;
+select lower(first_name) from user_entities;
+select mid(last_name, 1, 3) as LASTNAME from user_entities; 
+select first_name , length(first_name) from user_entities;
+select count(first_name)   from  user_entities;
+select * from user_entities  order by  first_name;
+select  concat( first_name, ' ,' , last_name) as FIRSTNAME_LASTNAME from user_entities where first_name='akshay';
+select first_name , reverse(first_name) from user_entities where id = 10;
+select first_name , now() as dateAndTime from user_entities;
+select first_name , min(age) from user_entities group by first_name;
+
+
+
+

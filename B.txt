@@ -1,0 +1,47 @@
+  @Test(enabled = false, groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "TC_21, To verify that video will not upload if user tap on mobile back button between ")
+    public void TC_InspectionAtYardScreen_021_To_Verifyd_That_Video_Will_Not_Upload_If_User_Tap_On_Mobile_Back_Button_Between() {
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HashMap<String, String> hm2 = new HashMap<String, String>();
+        HomeScreen homeScreen = new HomeScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.click_Tuple_ByAppointmentID(appointmentID);
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        carDetailScreen.is_CreateNewInspectionTxt_Present();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Cancel_Present(), "Cancel Button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        hm2 = inspectionScreen.fill_AllCheckpoints_AtYard();
+        carDetailScreen.click_ListItem_ME(Constants.IMPERFECTIONS);
+        ImperfectionsScreen.getInstance().clickOnImperfectionsCheckpoints(hm2);
+//        ImperfectionsScreen.getInstance().get_CheckPoints(appointmentID);
+//        ImperfectionsScreen.getInstance().get_CheckPointTitle(appointmentID);
+//        YardManager.getInstance().getCatalogueDTO().
+    }
+
+    @Test(enabled = false, groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "TC_21, To verify that User able to tap on Create new Inspection ➕ button and popup message will display with Yes\\No option and Also Status for particular Appointment Id will display as Checked In on home page")
+    public void TC_InspectionAtYardScreen_057_To_Verify_That_User_Able_To_Tap_On_Create_New_Inspection_Addbutton_And_Popup_Message_Will_Display_With() {
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        YardManager.getInstance().markAppointmentAsInspected_AllFilled_WithOneImperfection(appointmentID);
+        YardManager.getInstance().markAppointmentAsApproved(appointmentID);
+
+//        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+//        HomeScreen homeScreen = new HomeScreen();
+//        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+//        homeScreen.click_Tuple_ByAppointmentID(appointmentID);
+//        CarDetailScreen carDetailScreen = new CarDetailScreen();
+    }
+
+//-------------
+
+//    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "29,To verify that user able to select Imperfection Type which is Absolute in Nature ")
+//    public void TC_InspectionAtYardScreen_029_To_Verify_That_User_Able_To_Select_Imperfection_Type_Which_s_Absolute_In_Nature() {
+//        CarDetailScreen carDetailScreen = new CarDetailScreen();
+//
+//    }

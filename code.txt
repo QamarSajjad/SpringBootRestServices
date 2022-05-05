@@ -1,0 +1,136 @@
+
+    public void fillAllFomWithNotAcceptableRDBtn(){
+        InspectionScreen inspectionScreen= new InspectionScreen();
+
+
+        int nonAcceptableCount=0;
+        while(!carDetailScreen.is_CarDetailTitle_Present()) {
+            if (inspectionScreen.getText_Title_Lbl().equals(Constants.WINDSHIELD_FRONT) || inspectionScreen.getText_Title_Lbl().equals(Constants.GRILL) ||) {
+//        JarvisAssert.assertEquals(inspectionScreen.getText_Title_Lbl(),Constants.WINDSHIELD_FRONT;
+                inspectionScreen.captureImageFromCamera();
+                inspectionScreen.check_ImperfectionType_Item_By_User("Spots");
+                inspectionScreen.click_NonAcceptable_RD();
+                inspectionScreen.click_Submit_Btn();
+            }
+
+//           if(inspectionScreen.getText_Title_Lbl().equals(Constants.WINDSHIELD_FRONT))  {
+//               inspectionScreen.captureImageFromCamera();
+//               inspectionScreen.check_ImperfectionType_Item_By_User("Spots");
+//               inspectionScreen.click_NonAcceptable_RD();
+//               inspectionScreen.click_Submit_Btn();
+//           }
+//           else{
+//               inspectionScreen.captureImageFromCamera();
+//               inspectionScreen.check_OkNoImperfection_Chk();
+//               inspectionScreen.click_Submit_Btn();
+//           }
+////           JarvisAssert.assertEquals(inspectionScreen.getText_Title_Lbl(),Constants.GRILL);
+////           else if (inspectionScreen.getText_Title_Lbl().equals(Constants.GRILL)){
+////               inspectionScreen.check_ImperfectionType_Item_By_User("Scratched");
+////               inspectionScreen.click_NonAcceptable_RD();
+////
+////           }
+//////            JarvisAssert.assertEquals(inspectionScreen.getText_Title_Lbl(),Constants.PILLER);
+////           else if (inspectionScreen.getText_Title_Lbl().equals(Constants.PILLER)){
+////               inspectionScreen.check_ImperfectionType_Item_By_User("Scratched");
+////               inspectionScreen.click_NonAcceptable_RD();
+////           }
+//
+////           inspectionScreen.isPresent_NonAcceptable_RadioButton();
+////            nonAcceptableCount++;
+////            System.out.println( nonAcceptableCount++);
+//////            inspectionScreen.click_NonAcceptable_RD();
+//////            inspectionScreen.click_Submit_Btn();
+////
+////
+////
+////
+////        }
+//    }
+//
+//    public void one(){
+//            while(!carDetailScreen.is_CarDetailTitle_Present()){
+//            InspectionScreen inspectionScreen= new InspectionScreen();
+//            inspectionScreen.captureImageFromCamera();
+//            if (inspectionScreen.getText_Title_Lbl().equals(Constants.PILLER)){
+//                inspectionScreen.check_ImperfectionType_Item_By_User("Scratched");
+//                inspectionScreen.click_NonAcceptable_RD();
+//            }
+//            else{
+//                inspectionScreen.captureImageFromCamera();
+//                inspectionScreen.check_OkNoImperfection_Chk();
+//                inspectionScreen.click_Submit_Btn();
+//            }
+//
+//        }
+//
+//    }
+//
+//    public void two(){
+//        while(!carDetailScreen.is_CarDetailTitle_Present()){
+//            InspectionScreen inspectionScreen= new InspectionScreen();
+//            inspectionScreen.captureImageFromCamera();
+//            if (inspectionScreen.getText_Title_Lbl().equals(Constants.GRILL)){
+//                inspectionScreen.check_ImperfectionType_Item_By_User("Scratched");
+//                inspectionScreen.click_NonAcceptable_RD();
+//            }
+//            else{
+//                inspectionScreen.captureImageFromCamera();
+//                inspectionScreen.check_OkNoImperfection_Chk();
+//                inspectionScreen.click_Submit_Btn();
+//            }
+        }
+    }
+----------------
+
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "47,To verify that user able to see the all submitted non acceptable imperfections under Impections section on car details page ")
+    public void TC_InspectionAtYardScreen_47_To_Verify_That_User_Able_Io_See_The_All_Submitted_Non_Acceptable_Imperfections_Under_Impections_Section_On_Car_Details_Page(){
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.fill_SearchBar_Txt(appointmentID);
+        homeScreen.click_FirstTuple_ME();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        inspectionScreen.fillAllFomWithNotAcceptableRDBtn();
+//        inspectionScreen.one();
+//        inspectionScreen.two();
+    }
+--------------------------------------------
+
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "41, To verify that user able to resume inspection after close & relaunch the App ")
+    public void TC_InspectionAtYardScreen_41_To_Verify_That_User_Able_To_Resume_Inspection_After_Close_And_Relaunch_The_App()  {
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.fill_SearchBar_Txt(appointmentID);
+        homeScreen.click_FirstTuple_ME();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        JarvisAssert.assertEquals(inspectionScreen.getText_Title_Lbl(), Constants.WINDSHIELD_FRONT, "title is matched  as expected " + Constants.WINDSHIELD_FRONT);
+        inspectionScreen.captureImageFromCamera();
+        inspectionScreen.check_OkNoImperfection_Chk();
+        inspectionScreen.click_Submit_Btn();
+
+//        inspectionScreen.click_Back_Btn();
+//        inspectionScreen.click_Back_Btn();
+//        homeScreen.click_FlyOut_Btn();
+//        homeScreen.click_LogOut_Btn();
+//        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+//
+
+    }

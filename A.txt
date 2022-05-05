@@ -1,0 +1,892 @@
+package pageobjects;
+
+import com.cars24.servicesclient.enums.Role;
+import com.cars24.servicesclient.manager.InventoryManager;
+import com.cars24.servicesclient.manager.RefurbishmentManager;
+import com.cars24.servicesclient.manager.StudioManager;
+import com.cars24.servicesclient.pojo.cataloguemaster.response.CatalogueMasterResponseDTO;
+import com.cars24.servicesclient.pojo.cataloguemaster.response.Checkpoint;
+import com.cars24.servicesclient.pojo.createappointment.request.CreateAppointmentRequestDTO;
+import constants.Constants;
+import framework.configuration.GsonConfiguration;
+import framework.managers.DriverManager;
+import framework.reporting.logger.Logger;
+import framework.utils.ActionHelper;
+import framework.utils.JarvisAssert;
+import io.appium.java_client.MobileBy;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.testng.SkipException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import com.cars24.servicesclient.manager.RefurbishmentManager;
+import com.cars24.servicesclient.manager.StudioManager;
+import com.cars24.servicesclient.pojo.cataloguemaster.response.CatalogueMasterResponseDTO;
+import com.cars24.servicesclient.pojo.cataloguemaster.response.Checkpoint;
+import constants.Constants;
+import framework.configuration.GsonConfiguration;
+import framework.managers.DriverManager;
+import framework.reporting.logger.Logger;
+import framework.utils.ActionHelper;
+import framework.utils.JarvisAssert;
+import io.appium.java_client.MobileBy;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.testng.SkipException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+public class InspectionScreen {
+    private static InspectionScreen _instance;
+    CarDetailScreen carDetailScreen = new CarDetailScreen();
+    protected final By uploadImage_Btn = MobileBy.AccessibilityId("uploadImgBtn");
+    protected final By uploadVideo_Btn = MobileBy.AccessibilityId("uploadVidBtn");
+    protected final By other_WorkToBeDone_Txt = MobileBy.AccessibilityId("otherWork");
+    protected final By other_ImperfectionType_Txt = MobileBy.AccessibilityId("otherChoice");
+    protected final By capturePicture_Camera_Btn = MobileBy.AccessibilityId("takePicBtn");
+    protected final By start_RecordVideo_Camera_Btn = MobileBy.AccessibilityId("startVideoRecBtn");
+    protected final By stop_RecordVideo_Camera_Btn = MobileBy.AccessibilityId("stopVideoRecBtn");
+    protected final By okButton_RecordVideo_Btn = MobileBy.AccessibilityId("okVideoBtn");
+    protected final By okButton_Camera_Btn = MobileBy.AccessibilityId("okPicBtn");
+    protected final By retakeButton_Camera_Btn = MobileBy.AccessibilityId("retakePicBtn");
+    protected final By deletePhoto_btn = MobileBy.AccessibilityId("delPhotoBtn");
+    protected final By deleteVideo_btn = MobileBy.AccessibilityId("delVideoBtn");
+    protected final By allUnChecked_CheckBoxes_Chk = By.xpath("//android.view.ViewGroup[contains(@content-desc,'_unchecked')]");
+    protected final By allChecked_CheckBoxes_Chk = By.xpath("//android.view.ViewGroup[contains(@content-desc,'_checked')]");
+    protected final By notApplicable_Chk = By.xpath("//android.view.ViewGroup[contains(@content-desc,'Not Applicable')]");
+    protected final By okNoImperfection_Chk = By.xpath("//android.view.ViewGroup[contains(@content-desc,'No Imperfection')]");
+    protected final By submit_Btn = MobileBy.AccessibilityId("submitBtn");
+    protected final By resume_Btn = By.xpath("//android.widget.TextView[@text='RESUME']");
+    protected final By photosHorizontalScrollView_Me = By.xpath("//(android.widget.HorizontalScrollView)[1]");
+    protected final By videosHorizontalScrollView_Me = By.xpath("//(android.widget.HorizontalScrollView)[2]");
+    protected final By title_Lbl = By.xpath("//android.view.ViewGroup[@content-desc='backBtn']/following-sibling::android.widget.TextView");
+    protected final By back_Btn = MobileBy.AccessibilityId("backBtn");
+    protected final By nonAcceptable_RD = MobileBy.AccessibilityId("Non-Acceptable_RDBtn_unselected");
+    protected final By back_Bottom_Btn = By.xpath("(//android.view.ViewGroup[@content-desc='backBtn'])[2]");
+    protected final By first_ImperfectionType_Chk = By.xpath("//android.widget.TextView[@text='Select Imperfection type']//following-sibling::android.view.ViewGroup[1]");
+    protected final By first_ImperfectionType_Text = By.xpath("//android.widget.TextView[@text='Select Imperfection type']//following-sibling::android.widget.TextView[1]");
+
+    protected final By first_WorkToBeDone_Chk = By.xpath("//android.widget.TextView[@text='Select work to be done']//following-sibling::android.view.ViewGroup[1]");
+    //    private final By studio_SubmitInspection_Btn = By.xpath("//android.view.ViewGroup[@content-desc='submitBtn']/android.view.ViewGroup");
+    protected final By studio_SubmitInspection_Btn = By.xpath("//android.view.ViewGroup[contains(@content-desc,'submitBtn')]");
+    private final By acceptable_RD = By.xpath("//android.view.ViewGroup[contains(@content-desc,'Acceptable_RDBtn')]");
+    private final By nonacceptable_RD = By.xpath("//android.view.ViewGroup[contains(@content-desc,'Non-Acceptable_RDBtn')]");
+    private final By leadStatusLabel_Lbl = MobileBy.AccessibilityId("leadStatusLbl");
+    private final By confirmationMessage = By.id("android:id/message");
+    private final By cancelConfirmation_Btn = By.id("android:id/button1");
+    private final By confirmConfirmation_Btn = By.id("android:id/button2");
+    private final String pending_Text = "//android.view.ViewGroup[@content-desc='xyz']/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.TextView";
+    private final By inspectionAtStudio_Title = By.xpath("//android.widget.TextView[@content-desc='Inspection at Studio']");
+    private final By imperfections_Title = By.xpath("//android.widget.TextView[@content-desc='Imperfections']");
+    private final By currentConditionInImperfection = MobileBy.AccessibilityId("currentConditionLbl");
+    private final By partNameInImperfection = By.xpath("//android.widget.TextView[@content-desc='checkpointTitleLbl'])[2]");
+    protected String selectCheckBox_Label_Chk = "//android.widget.TextView[@text='xyz']/..";
+    String imperfectionTypeUncheck_String = "//android.view.ViewGroup[@content-desc='xyz_Chk_unchecked']/android.view.ViewGroup";
+    String imperfectionTypeCheck_String = "//android.view.ViewGroup[@content-desc='xyz_Chk_checked']/android.view.ViewGroup";
+    String ok_NoImperfectionCheck_String = "//android.view.ViewGroup[@content-desc='OK / No Imperfection_Chk_checked']/android.view.ViewGroup";
+    String ok_NoImperfectionUnCheck_String = "//android.view.ViewGroup[@content-desc='OK / No Imperfection_Chk_unchecked']/android.view.ViewGroup";
+
+    public static InspectionScreen getInstance() {
+        if (_instance == null) _instance = new InspectionScreen();
+        return _instance;
+    }
+
+    public void FillAllForms_WithOutNotApplicableCheckbox(String appointmentId) {
+        int formNo = RefurbishmentManager.getInstance().getFormNo_WithNotApplicableCheckBox(appointmentId);
+        System.out.println("Not Applicable Form No = " + formNo);
+        for (int count = 0; count < formNo - 1; count++) {
+            fillForm_Inspection_NoImperfection();
+        }
+    }
+
+    public void reachTillCheckpointWith_NotApplicableChk(String appointmentID) {
+        CatalogueMasterResponseDTO catalogueMasterResponseDTO = RefurbishmentManager.getInstance().getCatalogueDTO(appointmentID);
+
+        boolean notApplicableChk = false;
+
+        for (Checkpoint checkpoint : catalogueMasterResponseDTO.getCheckpoints()) {
+            if (checkpoint.getNoImperfectionChoices().get(0).getName().equalsIgnoreCase("Not Applicable"))
+                notApplicableChk = true;
+        }
+
+        if (!notApplicableChk)
+            throw new SkipException("No CheckPoint has Not Applicable CheckBox. Skipping this TestCase");
+
+        for (Checkpoint checkpoint : catalogueMasterResponseDTO.getCheckpoints()) {
+            if (checkpoint.getNoImperfectionChoices().get(0).getName().equalsIgnoreCase("Not Applicable"))
+                break;
+            fillForm_CheckPoint(checkpoint, true);
+        }
+    }
+
+    public void check_OkNoImperfection_Chk() {
+        ActionHelper.scrollTillElementSlowly(okNoImperfection_Chk);
+        if (getContentDescription_OkNoImperfection_Chk().contains("_unchecked"))
+            ActionHelper.click(okNoImperfection_Chk);
+    }
+
+    public void uncheck_OkNoImperfection_Chk() {
+        ActionHelper.scrollTillElementSlowly(okNoImperfection_Chk);
+        if (getContentDescription_OkNoImperfection_Chk().contains("_checked"))
+            ActionHelper.click(okNoImperfection_Chk);
+    }
+
+    public void click_NonAcceptable_RD() {
+        ActionHelper.click(nonAcceptable_RD);
+    }
+
+    public void click_Back_Bottom_Btn() {
+        ActionHelper.click(back_Bottom_Btn);
+        ActionHelper.waitForLoaderToHide();
+    }
+
+    public String getText_Title_Lbl() {
+        return ActionHelper.getText(title_Lbl);
+    }
+
+    public void check_NotApplicable_Chk() {
+        ActionHelper.gotoSleep(1000);
+        ActionHelper.scrollTillElementSlowly(notApplicable_Chk);
+        if (getContentDescription_NotApplicable_Chk().contains("_unchecked")) {
+            ActionHelper.click(notApplicable_Chk);
+            ActionHelper.click(notApplicable_Chk);
+
+        }
+    }
+
+    public String check_NotApplicable_ChkString() {
+        ActionHelper.scrollTillElementSlowly(notApplicable_Chk);
+        if (getContentDescription_NotApplicable_Chk().contains("_unchecked")) {
+            ActionHelper.click(notApplicable_Chk);
+        }
+        return Constants.NOT_APPLICABLE;
+    }
+
+    public void click_DeletePhoto_Btn() {
+        ActionHelper.click(deletePhoto_btn);
+    }
+
+    public void check_First_ImperfectionType_Chk() {
+        if (getContentDescription_FirstImperfectionType_Chk().contains("_unchecked"))
+            ActionHelper.click(first_ImperfectionType_Chk);
+    }
+
+    public void uncheck_First_ImperfectionType_Chk() {
+        ActionHelper.scrollTillElementSlowly(first_ImperfectionType_Chk);
+        if (getContentDescription_FirstImperfectionType_Chk().contains("_checked"))
+            ActionHelper.click(first_ImperfectionType_Chk);
+    }
+
+    public void click_Back_Btn() {
+        ActionHelper.click(back_Btn);
+        ActionHelper.waitForLoaderToHide();
+    }
+
+    public void check_First_WorkToBeDone_Chk() {
+        ActionHelper.scrollTillElementSlowly(first_WorkToBeDone_Chk);
+        System.out.println(getContentDescription_FirstWorkToBeDone_Chk());
+        if (getContentDescription_FirstWorkToBeDone_Chk().contains("_unchecked")) {
+            ActionHelper.click(first_WorkToBeDone_Chk);
+        }
+    }
+
+    public void uncheck_First_WorkToBeDone_Chk() {
+        ActionHelper.scrollTillElementSlowly(first_WorkToBeDone_Chk);
+        if (getContentDescription_FirstWorkToBeDone_Chk().contains("_checked"))
+            ActionHelper.click(first_WorkToBeDone_Chk);
+    }
+
+    public String getContentDescription_FirstImperfectionType_Chk() {
+        ActionHelper.scrollTillElementSlowly(first_ImperfectionType_Chk);
+        ActionHelper.gotoSleep(1000);
+        return ActionHelper.getAttribute(first_ImperfectionType_Chk, "content-desc");
+    }
+
+    public String getContentDescription_FirstImperfectionType_Text() {
+        ActionHelper.scrollTillElementSlowly(first_ImperfectionType_Text);
+        ActionHelper.gotoSleep(1000);
+        return ActionHelper.getAttribute(first_ImperfectionType_Text, "content-desc");
+    }
+
+    public String getContentDescription_FirstWorkToBeDone_Chk() {
+        ActionHelper.scrollTillElementSlowly(first_WorkToBeDone_Chk);
+        ActionHelper.gotoSleep(1000);
+        return ActionHelper.getAttribute(first_WorkToBeDone_Chk, "content-desc");
+    }
+
+    public boolean isPresent_DeletePhoto_Btn() {
+        ActionHelper.gotoSleep(1000);
+        return ActionHelper.isPresent(deletePhoto_btn);
+    }
+
+    public boolean isPresent_DeleteVideo_Btn() {
+        ActionHelper.gotoSleep(1000);
+        return ActionHelper.isPresent(deleteVideo_btn);
+    }
+
+    public boolean isPresent_UploadPhoto_Btn() {
+        ActionHelper.gotoSleep(1000);
+        return ActionHelper.isPresent(uploadImage_Btn);
+    }
+
+    public boolean isPresent_UploadVideo_Btn() {
+        ActionHelper.gotoSleep(1000);
+        return ActionHelper.isPresent(uploadVideo_Btn);
+    }
+
+    public void click_DeleteVideo_Btn() {
+        ActionHelper.click(deleteVideo_btn);
+    }
+
+    public void scrollPageUpTill_NoImperfection() {
+        while (!ActionHelper.isPresent(okNoImperfection_Chk)) {
+            ActionHelper.scrollPageUpSlowly();
+        }
+    }
+
+    public String getContentDescription_OkNoImperfection_Chk() {
+        ActionHelper.scrollTillElementSlowly(okNoImperfection_Chk);
+        ActionHelper.gotoSleep(1000);
+        return ActionHelper.getAttribute(okNoImperfection_Chk, "content-desc");
+    }
+
+    public String getContentDescription_NotApplicable_Chk() {
+        ActionHelper.scrollTillElementSlowly(notApplicable_Chk);
+        ActionHelper.gotoSleep(1000);
+        return ActionHelper.getAttribute(notApplicable_Chk, "content-desc");
+    }
+
+    public void uploadMultiplePhotos(int noOfPhotos) {
+        for (int i = 0; i < noOfPhotos; i++) {
+            captureImageFromCamera();
+            ActionHelper.scrollSectionHorizontally(photosHorizontalScrollView_Me);
+        }
+    }
+
+    public void uploadMultipleVideos(int noOfVideos) {
+        for (int i = 0; i < noOfVideos; i++) {
+            captureVideoFromCamera();
+            ActionHelper.scrollSectionHorizontally(videosHorizontalScrollView_Me);
+        }
+    }
+
+    public void click_uploadImage_Btn() {
+        ActionHelper.click(uploadImage_Btn);
+        CommonActions.getInstance().click_AllowButton_PermissionDialogue_Btn();
+    }
+
+    public void click_uploadVideo_Btn() {
+        ActionHelper.click(uploadVideo_Btn);
+        CommonActions.getInstance().click_AllowButton_PermissionDialogue_Btn();
+    }
+
+    public void click_CapturePicture_Camera_Btn() {
+        ActionHelper.click(capturePicture_Camera_Btn);
+    }
+
+    public void click_Start_RecordVideo_Camera_Btn() {
+        ActionHelper.click(start_RecordVideo_Camera_Btn);
+        ActionHelper.gotoSleep(1000);
+    }
+
+    public void click_Stop_RecordVideo_Camera_Btn() {
+        ActionHelper.click(stop_RecordVideo_Camera_Btn);
+        ActionHelper.gotoSleep(1000);
+    }
+
+    public void click_OkButton_RecordVideo_Btn() {
+        ActionHelper.click(okButton_RecordVideo_Btn);
+        //ActionHelper.gotoSleep(1000);
+
+        /*
+        ActionHelper.gotoSleep(2000);
+        Dimension dimension = DriverManager.getDriver().manage().window().getSize();
+        int height = dimension.getHeight();
+        int width = dimension.getWidth();
+
+        int x = Double.valueOf(width * 0.75).intValue();
+        int y = Double.valueOf(height * 0.826).intValue();
+
+        System.out.println("x = " + x + "  y = " + y);
+
+        ActionHelper.tapOnPosition(x, y);
+
+         */
+    }
+
+    public void click_OkButton_Camera_Btn() {
+        ActionHelper.click(okButton_Camera_Btn);
+        ActionHelper.gotoSleep(1000);
+    }
+
+    public void captureImageFromCamera() {
+        click_uploadImage_Btn();
+        click_CapturePicture_Camera_Btn();
+        click_OkButton_Camera_Btn();
+    }
+
+    public void captureVideoFromCamera() {
+        click_uploadVideo_Btn();
+        click_Start_RecordVideo_Camera_Btn();
+        click_Stop_RecordVideo_Camera_Btn();
+        click_OkButton_RecordVideo_Btn();
+        ActionHelper.waitForLoaderToHide();
+    }
+
+    public int getSize_AllChecked_CheckCheckboxes_Me() {
+        waitForSubmit_Btn();
+        return ActionHelper.findElementsWithoutWait(allChecked_CheckBoxes_Chk).size();
+    }
+
+
+    public void waitForSubmit_Btn() {
+        ActionHelper.findElement(submit_Btn);
+    }
+
+    public void unCheck_AllChecked_Checkboxes_Chk() {
+        for (int i = 0; i < 3; i++) {
+            List<WebElement> webElements = DriverManager.getDriver().findElements(allChecked_CheckBoxes_Chk);
+            for (WebElement webElement : webElements) {
+                try {
+                    if (webElement.isDisplayed()) webElement.click();
+                } catch (Exception ignored) {
+                }
+                ActionHelper.gotoSleep(200);
+            }
+            ActionHelper.scrollPageDownSlowly();
+            ActionHelper.gotoSleep(1000);
+        }
+    }
+
+    public void click_AllCheckBoxes_Chk() {
+        for (int i = 0; i < 4; i++) {
+            List<WebElement> webElements = DriverManager.getDriver().findElements(allUnChecked_CheckBoxes_Chk);
+            for (WebElement webElement : webElements) {
+                try {
+                    if (webElement.isDisplayed()) webElement.click();
+                } catch (Exception ignored) {
+                }
+                ActionHelper.gotoSleep(200);
+            }
+            ActionHelper.scrollPageDownSlowly();
+            ActionHelper.gotoSleep(1000);
+        }
+    }
+
+    public void fill_Others_InspectionType_Txt(String input) {
+        ActionHelper.scrollTillElementSlowly(other_ImperfectionType_Txt);
+        ActionHelper.sendKeys(other_ImperfectionType_Txt, input);
+    }
+
+    public String getText_Other_ImperfectionType_Txt() {
+        ActionHelper.scrollTillElementSlowly(other_ImperfectionType_Txt);
+        return ActionHelper.getText(other_ImperfectionType_Txt);
+    }
+
+    public void fill_Others_WorkToBeDone_Txt(String input) {
+        ActionHelper.scrollTillElementSlowly(other_WorkToBeDone_Txt);
+        ActionHelper.sendKeys(other_WorkToBeDone_Txt, input);
+    }
+
+    public String getText_Other_WorkToBeDone_Txt() {
+        ActionHelper.scrollTillElementSlowly(other_WorkToBeDone_Txt);
+        return ActionHelper.getText(other_WorkToBeDone_Txt);
+    }
+
+    public void click_CheckBox_Label_Chk(String value) {
+        By by = By.xpath(selectCheckBox_Label_Chk.replace("xyz", value));
+        ActionHelper.scrollTillElement(by);
+        ActionHelper.click(by);
+    }
+
+    public boolean isPresent_Submit_Btn() {
+        return ActionHelper.isPresent(submit_Btn, 3000);
+    }
+
+    public void click_Submit_Btn() {
+        ActionHelper.click(submit_Btn);
+        ActionHelper.waitForLoaderToHide();
+    }
+
+    public void click_Submit_Btn_WithoutWait() {
+        ActionHelper.click(submit_Btn);
+    }
+
+    public boolean isPresent_Resume_Btn() {
+        ActionHelper.gotoSleep(1000);
+        return ActionHelper.isPresent(resume_Btn);
+    }
+
+    public void click_Resume_Btn() {
+        if (isPresent_Resume_Btn()) ActionHelper.click(resume_Btn);
+
+    }
+
+
+    public void fillForm_Inspection_NoImperfection() {
+        captureImageFromCamera();
+        check_First_ImperfectionType_Chk();
+        check_First_WorkToBeDone_Chk();
+        click_Submit_Btn();
+    }
+
+    public void fillForm_Inspection_WithPhotoAndVideo_NoImperfection() {
+        captureImageFromCamera();
+        captureVideoFromCamera();
+        check_OkNoImperfection_Chk();
+        click_Submit_Btn();
+    }
+
+    public void fillForm_PDI_WithPhoto() {
+        captureImageFromCamera();
+        check_OkNoImperfection_Chk();
+        click_Submit_Btn();
+    }
+
+    public void delete_AllImages() {
+        int iCounter = 0;
+        while (isPresent_DeletePhoto_Btn() && iCounter < 15) {
+            click_DeletePhoto_Btn();
+            ActionHelper.gotoSleep(1000);
+            iCounter++;
+        }
+    }
+
+    public void fillForm_CheckPoint(Checkpoint checkpoint, boolean noImperfection) {
+        int minPhotoCount = checkpoint.getImages().getMinCount();
+        int minVideoCount = checkpoint.getVideos().getMinCount();
+
+        uploadMultiplePhotos(minPhotoCount);
+        uploadMultiplePhotos(minVideoCount);
+        if (noImperfection) {
+            check_OkNoImperfection_Chk();
+        } else {
+            check_First_ImperfectionType_Chk();
+            check_First_WorkToBeDone_Chk();
+        }
+        click_Submit_Btn();
+    }
+
+    public void fillForm_PDI_CheckPoint(Checkpoint checkpoint, boolean noImperfection) {
+        int minPhotoCount = checkpoint.getPdi().getImages().getMinCount();
+        int minVideoCount = checkpoint.getPdi().getVideos().getMinCount();
+
+        uploadMultiplePhotos(minPhotoCount);
+        uploadMultiplePhotos(minVideoCount);
+        if (noImperfection) {
+            check_OkNoImperfection_Chk();
+        } else {
+            check_First_ImperfectionType_Chk();
+            check_First_WorkToBeDone_Chk();
+        }
+
+        click_Submit_Btn();
+    }
+
+    public void fillAllForms_WithNoImperfection(String appointmentID) {
+        CatalogueMasterResponseDTO catalogueMasterResponseDTO = RefurbishmentManager.getInstance().getCatalogueDTO(appointmentID);
+        for (Checkpoint checkpoint : catalogueMasterResponseDTO.getCheckpoints()) {
+            fillForm_CheckPoint(checkpoint, true);
+        }
+    }
+
+
+    public void fillforms_WithNoImperfection() {
+        while (!CarDetailScreen.getInstance().is_CarDetailTitle_Present()) {
+            fillForm_Inspection_NoImperfection();
+        }
+    }
+
+
+    public void fillAllForms_WithNoImperfection(String appointmentID, int startFormNo) {
+        CatalogueMasterResponseDTO catalogueMasterResponseDTO = RefurbishmentManager.getInstance().getCatalogueDTO(appointmentID);
+        List<Checkpoint> checkpoints = catalogueMasterResponseDTO.getCheckpoints();
+        for (int i = startFormNo - 1; i < checkpoints.size(); i++)
+            fillForm_CheckPoint(checkpoints.get(i), true);
+    }
+
+    public void fillAllForms_With1Imperfection(String appointmentID) {
+        CatalogueMasterResponseDTO catalogueMasterResponseDTO = RefurbishmentManager.getInstance().getCatalogueDTO(appointmentID);
+        List<Checkpoint> checkpoints = catalogueMasterResponseDTO.getCheckpoints();
+        fillForm_CheckPoint(catalogueMasterResponseDTO.getCheckpoints().get(0), false);
+        for (int i = 1; i < checkpoints.size(); i++)
+            fillForm_CheckPoint(checkpoints.get(i), true);
+    }
+
+    public void fillAllForms_PDI_NoImperfection(String appointmentID) {
+        CatalogueMasterResponseDTO catalogueMasterResponseDTO = RefurbishmentManager.getInstance().getCatalogueDTO(appointmentID);
+        for (Checkpoint checkpoint : catalogueMasterResponseDTO.getCheckpoints()) {
+            fillForm_PDI_CheckPoint(checkpoint, true);
+        }
+    }
+
+    public void fillAllForms_PDI_With1Imperfection(String appointmentID) {
+        CatalogueMasterResponseDTO catalogueMasterResponseDTO = RefurbishmentManager.getInstance().getCatalogueDTO(appointmentID);
+        List<Checkpoint> checkpoints = catalogueMasterResponseDTO.getCheckpoints();
+        fillForm_PDI_CheckPoint(catalogueMasterResponseDTO.getCheckpoints().get(0), false);
+        for (int i = 1; i < checkpoints.size(); i++)
+            fillForm_PDI_CheckPoint(checkpoints.get(i), true);
+
+    }
+
+    public void reachTillVideoMandatoryCheckpoint(String appointmentID) {
+        CatalogueMasterResponseDTO catalogueMasterResponseDTO = RefurbishmentManager.getInstance().getCatalogueDTO(appointmentID);
+
+        boolean videoMandatory = false;
+
+        for (Checkpoint checkpoint : catalogueMasterResponseDTO.getCheckpoints()) {
+            if (checkpoint.getVideos().getMinCount() > 0)
+                videoMandatory = true;
+        }
+
+        if (!videoMandatory)
+            throw new SkipException("No CheckPoint has Video Mandatory. Skipping this TestCase");
+
+        for (Checkpoint checkpoint : catalogueMasterResponseDTO.getCheckpoints()) {
+            if (checkpoint.getVideos().getMinCount() > 0)
+                break;
+            fillForm_CheckPoint(checkpoint, true);
+        }
+    }
+
+    public String getContentDescription_okNoImperfection_Chk() {
+        ActionHelper.scrollPageUpSlowly();
+        ActionHelper.gotoSleep(1000);
+        return ActionHelper.getAttribute(okNoImperfection_Chk, "content-desc");
+    }
+
+    public void select_Acceptable_RadioButtons() {
+        if (getContentDescription_Acceptable_RD().contains(Constants.RADIOBUTTON_STATUS_UNSELECTED))
+            ActionHelper.click(acceptable_RD);
+    }
+
+    public void select_nonAcceptable_RadioButtons() {
+        if (getContentDescription_NonAcceptable_RD().contains(Constants.RADIOBUTTON_STATUS_UNSELECTED))
+            ActionHelper.click(nonAcceptable_RD);
+    }
+
+    public boolean isPresent_Acceptable_RadioButton() {
+        return ActionHelper.isPresent(acceptable_RD);
+    }
+
+    public boolean isPresent_NonAcceptable_RadioButton() {
+        return ActionHelper.isPresent(nonAcceptable_RD);
+    }
+
+    public String getContentDescription_NonAcceptable_RD() {
+//        ActionHelper.scrollTillElementSlowly(nonAcceptable_RD);
+        ActionHelper.gotoSleep(1000);
+        return ActionHelper.getAttribute(nonacceptable_RD, "content-desc");
+    }
+
+    public String getContentDescription_Acceptable_RD() {
+//        ActionHelper.scrollTillElementSlowly(acceptable_RD);
+        ActionHelper.gotoSleep(1000);
+        return ActionHelper.getAttribute(acceptable_RD, "content-desc");
+    }
+
+    public void click_SubmitInspection_Button() {
+        ActionHelper.click(studio_SubmitInspection_Btn);
+    }
+
+    public Boolean isLeadStatusLblPresent() {
+        return ActionHelper.isPresent(leadStatusLabel_Lbl);
+    }
+
+    public Boolean is_StudioSubmitInspectionBtn_Enabled() {
+        ActionHelper.scrollTillElementSlowly(studio_SubmitInspection_Btn);
+        if (getContentDescription_SubmitInspection_Btn().contains("_true"))
+            return true;
+        else
+            return false;
+    }
+
+    public String get_ConfirmationMessage() {
+        return ActionHelper.getText(confirmationMessage);
+    }
+
+    public void click_CancelConfirmation_Btn() {
+        ActionHelper.click(cancelConfirmation_Btn);
+    }
+
+    public void click_ConfirmConfirmation_Btn() {
+        ActionHelper.click(confirmConfirmation_Btn);
+    }
+
+    public Boolean is_NoConfirmationButton_Present() {
+        return ActionHelper.isPresent(cancelConfirmation_Btn);
+    }
+
+    public Boolean is_YesConfirmationButton_Present() {
+        return ActionHelper.isPresent(confirmConfirmation_Btn);
+    }
+
+    public void captureImageFromCameraAfterOneRetake() {
+        click_uploadImage_Btn();
+        click_CapturePicture_Camera_Btn();
+        click_Retake_Camera_Btn();
+        click_CapturePicture_Camera_Btn();
+        click_OkButton_Camera_Btn();
+    }
+
+    public void click_Retake_Camera_Btn() {
+        ActionHelper.click(retakeButton_Camera_Btn);
+        ActionHelper.gotoSleep(1000);
+    }
+
+    public void click_ListItem_ME(String text) {
+        String listItem_Xpath = "//android.widget.TextView[@text='xyz']/..";
+        By by = By.xpath(listItem_Xpath.replace("xyz", text));
+        ActionHelper.click(by);
+        ActionHelper.gotoSleep(1000);
+        Logger.logPass("Click on Item = " + text);
+    }
+
+    public Boolean is_PendingLabel_Present(String value) {
+        By by = By.xpath(pending_Text.replace("xyz", value));
+        return ActionHelper.isEnabled(by);
+    }
+
+    public Boolean is_InspectionAtStudioTitle_Present() {
+        ActionHelper.waitForLoaderToHide();
+        return ActionHelper.isEnabled(inspectionAtStudio_Title);
+    }
+
+    public Boolean is_ImperfectionsTitle_Present() {
+        ActionHelper.waitForLoaderToHide();
+        return ActionHelper.isEnabled(imperfections_Title);
+    }
+
+    public void fill_AllCheckpoints() {
+        while (!is_InspectionAtStudioTitle_Present()) {
+            captureImageFromCamera();
+            ActionHelper.gotoSleep(2000);
+//            captureVideoFromCamera();
+            check_OkNoImperfection_Chk();
+            click_Submit_Btn();
+        }
+
+    }
+
+    public void fill_All_Car_Details_Checkpoints() {
+        while (!carDetailScreen.isPresent_Title_CarDetailPage_Lbl()) {
+            captureImageFromCamera();
+            ActionHelper.gotoSleep(2000);
+//            captureVideoFromCamera();
+            check_OkNoImperfection_Chk();
+            click_Submit_Btn();
+        }
+
+    }
+
+
+    public Boolean is_ImperfectionTypeItem_Checked(String item) {
+        By by = By.xpath(imperfectionTypeCheck_String.replace("xyz", item));
+        ActionHelper.scrollPageUp();
+        ActionHelper.scrollTillElementVerySlowly(by);
+        return ActionHelper.isPresent(by);
+    }
+
+    public Boolean is_OkNoImperfection_Checked() {
+        By by = By.xpath(ok_NoImperfectionCheck_String);
+        ActionHelper.scrollTillElementSlowly(by);
+        return ActionHelper.isPresent(by);
+    }
+
+    public Boolean is_OKNoImperfection_Checked() {
+        By by = By.xpath(ok_NoImperfectionCheck_String);
+        return ActionHelper.isPresent(by);
+    }
+
+    public void get_CheckPoints(String appointmentID) {
+        ArrayList<String> list = new ArrayList<String>();
+
+        CatalogueMasterResponseDTO catalogue = StudioManager.getInstance().getCatalogueDTO(appointmentID);
+        for (Checkpoint checkpoint : catalogue.getCheckpoints()) {
+            System.out.println(GsonConfiguration.getGson().toJson(checkpoint));
+        }
+    }
+
+    public String get_CheckPointKey(String appointmentID, int index) {
+        CatalogueMasterResponseDTO catalogue = StudioManager.getInstance().getCatalogueDTO(appointmentID);
+        return catalogue.getCheckpoints().get(index).getKey();
+    }
+
+    public String get_CheckPointCategory(String appointmentID, int index) {
+        CatalogueMasterResponseDTO catalogue = StudioManager.getInstance().getCatalogueDTO(appointmentID);
+        return catalogue.getCheckpoints().get(index).getCategory();
+    }
+
+    public String get_CheckPointSubCategory(String appointmentID, int index) {
+        CatalogueMasterResponseDTO catalogue = StudioManager.getInstance().getCatalogueDTO(appointmentID);
+        return catalogue.getCheckpoints().get(index).getSubCategory();
+    }
+
+    public String get_CheckPointTitle(String appointmentID, int index) {
+        CatalogueMasterResponseDTO catalogue = StudioManager.getInstance().getCatalogueDTO(appointmentID);
+        return catalogue.getCheckpoints().get(index).getTitle();
+    }
+
+    public String get_PartNameInImperfection() {
+        return ActionHelper.getText(partNameInImperfection);
+    }
+
+    public String get_CurrentCondition() {
+        return ActionHelper.getText(currentConditionInImperfection);
+    }
+
+    public void checkCheckpoints(String appointmentId) {
+
+        for (int i = 0; i < StudioManager.getInstance().getTotalCheckPointCount(appointmentId); i++) {
+            click_ListItem_ME(get_CheckPointCategory(appointmentId, i));
+            click_ListItem_ME(get_CheckPointSubCategory(appointmentId, i));
+            click_ListItem_ME(get_CheckPointTitle(appointmentId, i));
+            uncheck_OkNoImperfection_Chk();
+//            JarvisAssert.assertTrue(!is_OKNoImperfection_UnChecked(), "Checkbox is checked as expected");
+//            ActionHelper.gotoSleep(2000);
+            click_Back_Btn();
+            click_Back_Btn();
+            click_Back_Btn();
+        }
+    }
+
+    public Boolean is_OKNoImperfection_UnChecked() {
+        By by = By.xpath(ok_NoImperfectionUnCheck_String);
+        return ActionHelper.isPresent(by);
+    }
+
+    public void check_ImperfectionType_Item(String item) {
+        By by = By.xpath(imperfectionTypeUncheck_String.replace("xyz", item));
+        ActionHelper.scrollTillElementSlowly(by);
+        if (ActionHelper.isPresent(by))
+            ActionHelper.click(by);
+        Logger.logPass("Check on Item = " + item);
+    }
+
+    public Boolean is_ImperfectionTypeitem_Checked(String item) {
+        By by = By.xpath(imperfectionTypeCheck_String.replace("xyz", item));
+        ActionHelper.scrollPageUpSlowly();
+        return ActionHelper.isPresent(by);
+    }
+
+    public String getContentDescription_SubmitInspection_Btn() {
+        ActionHelper.scrollTillElementSlowly(studio_SubmitInspection_Btn);
+        ActionHelper.gotoSleep(1000);
+        return ActionHelper.getAttribute(studio_SubmitInspection_Btn, "content-desc");
+    }
+
+    public void check_OkNoimperfection_Chk() {
+        ActionHelper.scrollPageUp();
+        if (getContentDescription_OkNoImperfection_Chk().contains("_unchecked"))
+            ActionHelper.click(okNoImperfection_Chk);
+    }
+
+    public boolean isPresent_NonAcceptable_RD_Btn() {
+        ActionHelper.scrollPageDownSlowly();
+        return ActionHelper.isPresent(nonAcceptable_RD);
+
+    }
+
+    public boolean isPresentNotAppllicableRDBtn() {
+        return ActionHelper.isPresent(notApplicable_Chk);
+    }
+
+    public void check_ImperfectionType_Item_By_User(String item) {
+        ActionHelper.scrollPageDownVerySlowly();
+        By by = By.xpath(imperfectionTypeUncheck_String.replace("xyz", item));
+        ActionHelper.scrollTillElementSlowly(by);
+        if (ActionHelper.isPresent(by))
+            ActionHelper.click(by);
+        Logger.logPass("Check on Item = " + item);
+    }
+
+    public void addImageAndSelectNoImperfactionTypeUntilCarDetailScreenPresent() {
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        while (!carDetailScreen.is_CarDetailTitle_Present()) {
+            int count = 0;
+            CarDetailScreen carDetailScreen = new CarDetailScreen();
+            CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+            String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+            System.out.println(get_CheckPointTitle(appointmentID, count++));
+            inspectionScreen.captureImageFromCamera();
+            inspectionScreen.check_OkNoImperfection_Chk();
+            inspectionScreen.click_Submit_Btn();
+        }
+    }
+
+    public void selectOnlyNotApplicableCheckboxIfThisFieldIsAvailable() {
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        while (!isPresentNotAppllicableRDBtn()) {
+            int count = 0;
+            CarDetailScreen carDetailScreen = new CarDetailScreen();
+            CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+            String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+            System.out.println(get_CheckPointTitle(appointmentID, count++));
+            inspectionScreen.captureImageFromCamera();
+            inspectionScreen.check_OkNoImperfection_Chk();
+            inspectionScreen.click_Submit_Btn();
+        }
+        public HashMap<String, String> fill_AllCheckpoints_AtYard() {
+            HashMap<String, String> hm = new HashMap<String, String>();
+            while (!CarDetailScreen.getInstance().is_CarDetailTitle_Present()) {
+                String title = getText_Title_Lbl();
+                captureImageFromCamera();
+                ActionHelper.gotoSleep(2000);
+                captureVideoFromCamera();
+                check_First_ImperfectionType_Chk();
+                String imperfection = get_FirstImperfectionType_Text();
+                hm.put(title, imperfection);
+                click_Submit_Btn();
+            }
+            return hm;
+        }
+
+        public String get_FirstImperfectionType_Text() {
+            ActionHelper.scrollTillElementSlowly(first_ImperfectionType_Chk);
+            String firstImperfectionText = getContentDescription_FirstImperfectionType_Chk();
+            return firstImperfectionText.split("_")[0];
+        }
+
+        public void fill_checkpointsd (String appointmentID){
+            int n = RefurbishmentManager.getInstance().getFormNo_WithNotApplicableCheckBox(appointmentID);
+            System.out.print("form no-" + n);
+            click_ListItem_ME(get_CheckPointCategory(appointmentID, n));
+            click_ListItem_ME(get_CheckPointSubCategory(appointmentID, n));
+            click_ListItem_ME(get_CheckPointTitle(appointmentID, n));
+        }
+
+        public void doubleclick_ListItem_ME (String text){
+            String listItem_Xpath = "//android.widget.TextView[@text='xyz']/..";
+            By by = By.xpath(listItem_Xpath.replace("xyz", text));
+            ActionHelper.click(by);
+            ActionHelper.click(by);
+            ActionHelper.gotoSleep(1000);
+            Logger.logPass("Click on Item = " + text);
+        }
+
+        public void goToCheckpointHavingMandatoryVideo (String appointmentID){
+            CatalogueMasterResponseDTO catalogueMasterResponseDTO = StudioManager.getInstance().getCatalogueDTO(appointmentID);
+            String title = "";
+            String category = "";
+            String subCategory = "";
+            for (Checkpoint checkpoint : catalogueMasterResponseDTO.getCheckpoints()) {
+                if (checkpoint.getVideos().getMinCount() > 0)
+                    title = checkpoint.getTitle();
+                category = checkpoint.getCategory();
+                subCategory = checkpoint.getSubCategory();
+                break;
+            }
+            JarvisAssert.assertTrue(is_PendingLabel_Present(category), "Pending label is present as expected");
+            click_ListItem_ME(category);
+            JarvisAssert.assertTrue(is_PendingLabel_Present(subCategory), "Pending label is present as expected");
+            click_ListItem_ME(subCategory);
+            JarvisAssert.assertTrue(is_PendingLabel_Present(title), "Pending label is present as expected");
+            click_ListItem_ME(title);
+        }
+    }
+}

@@ -1,0 +1,8 @@
+GitHubCredentials
+
+Username=QamarSajjad
+password=@Password626
+
+https://uat-htcms.qtsolvdev.com/login
+username: test1
+password: admin123

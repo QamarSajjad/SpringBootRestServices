@@ -1,0 +1,349 @@
+
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "TC_23, To verify that App will not allow user to add video more than 1 if API will receive exceed request to defined max limit ")
+    public void TC_InspectionAtYardScreen_023_To_Verify_That_User_Able_To_Remove_Video_From_Add_Videos_Option() {
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.click_Tuple_ByAppointmentID(appointmentID);
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        carDetailScreen.is_CreateNewInspectionTxt_Present();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Cancel_Present(), "Cancel Button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        inspectionScreen.captureVideoFromCamera();
+        inspectionScreen.click_DeleteVideo_Btn();
+        JarvisAssert.assertTrue(inspectionScreen.isPresent_UploadVideo_Btn(), "Check Upload Video Button Should be present");
+    }
+
+    // by qamar 33
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "TC_33, To verify that user not able to submit checkpoint without adding any image if image field is defined as mandatory in API Schema ")
+    public void TC_InspectionAtYardScreen_033_To_Verify_Vhat_User_Not_Able_To_Submit_Checkpoint_Without_Adding_Any_Image_If_Image_Field_Is_Defined_Is_Mandatory_In_API_Schema() {
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        String actualToastMessage;
+        String expectedToastMessage = "Please add atleast 1 image";
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.click_Tuple_ByAppointmentID(appointmentID);
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        carDetailScreen.is_CreateNewInspectionTxt_Present();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Cancel_Present(), "Cancel Button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        inspectionScreen.click_Submit_Btn();
+        actualToastMessage = ActionHelper.getToastMessage();
+        JarvisAssert.assertEquals(actualToastMessage, expectedToastMessage, "Toast Message is matched as expected" + expectedToastMessage);
+    }
+
+    //38
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "39, To verify that user not able to submit checkpoint without adding any image if image field is defined as mandatory in API Schema ")
+    public void TC_InspectionAtYardScreen_039_To_Verify_That_User_Able_To_Redirect_On_Car_Details_Page_After_Tapping_On_Top_Arrow_Button() {
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.fill_SearchBar_Txt(appointmentID);
+        ActionHelper.gotoSleep(3000);
+        JarvisAssert.assertEquals(homeScreen.getText_LeadStatusLabel_FirstTuple_Lbl(), Constants.CHECKED_IN, "lead status is mached as expected");
+        JarvisAssert.assertEquals(carDetailScreen.get_CarDetailScreen_Title(),Constants.PAGE_TITLE_CAR_DETAILS_PAGE,"lead status is mached as expected");
+        homeScreen.click_FirstTuple_ME();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        JarvisAssert.assertEquals(inspectionScreen.getText_Title_Lbl(), Constants.WINDSHIELD_FRONT, "title is matched  as expected " + Constants.WINDSHIELD_FRONT);
+        inspectionScreen.captureImageFromCamera();
+        inspectionScreen.check_OkNoImperfection_Chk();
+        inspectionScreen.click_Submit_Btn();
+        inspectionScreen.click_Back_Bottom_Btn();
+        JarvisAssert.assertEquals(inspectionScreen.getText_Title_Lbl(), Constants.WINDSHIELD_FRONT, "title is matched  as expected " + Constants.WINDSHIELD_FRONT);
+    }
+
+    //39
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "40, To verify that user able to see the status for car inspection on home page from \"Checked In\" to \"Initiated\" after submit atleast one checkpoint ")
+    public void TC_InspectionAtYardScreen_040_To_Verify_That_User_Able_To_See_The_Status_For_Car_Inspection_On_Home_Page_From_Checked_In_To_Initiated_After_Submit_Atleast_One_Checkpoint() {
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.fill_SearchBar_Txt(appointmentID);
+        ActionHelper.gotoSleep(3000);
+        JarvisAssert.assertEquals(homeScreen.getText_LeadStatusLabel_FirstTuple_Lbl(), Constants.CHECKED_IN, "lead status is mached as expected");
+        homeScreen.click_FirstTuple_ME();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        JarvisAssert.assertEquals(inspectionScreen.getText_Title_Lbl(), Constants.WINDSHIELD_FRONT, "title is matched  as expected " + Constants.WINDSHIELD_FRONT);
+        inspectionScreen.captureImageFromCamera();
+        inspectionScreen.check_OkNoImperfection_Chk();
+        inspectionScreen.click_Submit_Btn();
+        inspectionScreen.click_Back_Btn();
+        JarvisAssert.assertEquals(carDetailScreen.get_CarDetailScreen_Title(), Constants.PAGE_TITLE_CAR_DETAILS_PAGE, "title is matched  as expected " + Constants.PAGE_TITLE_CAR_DETAILS_PAGE);
+
+    }
+
+    //40
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "41, To verify that user able to see the status for car inspection on home page from \"Checked In\" to \"Initiated\" after submit atleast one checkpoint ")
+    public void TC_InspectionAtYardScreen_041_To_Verify_That_User_Able_To_see_The_Status_For_Car_Inspection_On_Home_Page_From_Checked_In_To_Initiated_After_Submit_Atleast_One_Checkpoint() {
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.fill_SearchBar_Txt(appointmentID);
+        ActionHelper.gotoSleep(3000);
+        JarvisAssert.assertEquals(homeScreen.getText_LeadStatusLabel_FirstTuple_Lbl(), Constants.CHECKED_IN, "lead status is mached as expected");
+        homeScreen.click_FirstTuple_ME();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        JarvisAssert.assertEquals(inspectionScreen.getText_Title_Lbl(), Constants.WINDSHIELD_FRONT, "title is matched  as expected " + Constants.WINDSHIELD_FRONT);
+        inspectionScreen.captureImageFromCamera();
+        inspectionScreen.check_OkNoImperfection_Chk();
+        inspectionScreen.click_Submit_Btn();
+        inspectionScreen.click_Back_Btn();
+        carDetailScreen.click_Back_Btn();
+        JarvisAssert.assertEquals(homeScreen.getText_LeadStatusLabel_FirstTuple_Lbl(), Constants.INITIATED, "title is matched  as expected" + Constants.INITIATED);
+    }
+
+
+    // TC_44 fill_checkpoint
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "44, To verify that user able to see the count of non acceptable imperfections on car details page after submit the inspection  ")
+    public void TC_InspectionAtYardScreen_044_To_verify_that_User_Able_To_Resume_Inspection_After_Close_And_Relaunch_The_App() {
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.fill_SearchBar_Txt(appointmentID);
+        ActionHelper.gotoSleep(3000);
+        JarvisAssert.assertEquals(homeScreen.getText_LeadStatusLabel_FirstTuple_Lbl(), Constants.CHECKED_IN, "lead status is mached as expected");
+        homeScreen.click_FirstTuple_ME();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        inspectionScreen.fill_All_Car_Details_Checkpoints();
+
+    }
+
+    //TC43 Estimated // Test Passed
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "43, To verify that user able to see the status for car inspection on home page from \"Initiated\" to \"Estimated\" after successful submission of the inspection ")
+    public void TC_InspectionAtYardScreen_043_To_Verify_That_User_Able_To_See_The_Status_For_Car_Inspection_On_Home_Page_From_Initiated_To_Estimated_After_Successful_Submission_Of_The_Inspection() throws InterruptedException {
+
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        YardManager.getInstance().markAppointmentAsInspected_AllFilled_WithOneImperfection(appointmentID);
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.fill_SearchBar_Txt(appointmentID);
+        ActionHelper.gotoSleep(3000);
+        homeScreen.click_FirstTuple_ME();
+        JarvisAssert.assertEquals(homeScreen.getText_LeadStatusLabel_FirstTuple_Lbl(),Constants.ESTIMATED);
+    }
+
+
+    // Date 16/03/2022
+     // TC46 by imperfection_Count// Test Passed
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "46, To verify that user able to see the count of non acceptable imperfections on car details page after submit the inspection  ")
+    public void TC_InspectionAtYardScreen_046_To_Verify_That_User_Able_To_See() throws InterruptedException {
+
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        YardManager.getInstance().markAppointmentAsInspected_AllFilled_WithOneImperfection(appointmentID);
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.fill_SearchBar_Txt(appointmentID);
+        ActionHelper.gotoSleep(3000);
+        homeScreen.click_FirstTuple_ME();
+        JarvisAssert.assertEquals(carDetailScreen.get_Imperfection_Count(),"1 Imperfections");
+    }
+
+
+    //TC 27 passed
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "27, To verify that if user select OK / No Imperfection then previously selected checkboxes from Imperfection type will be deselected ")
+    public void TC_InspectionAtYardScreen_027_To_Verify_That_If_User_Select_Not_Applicable_Checkbox_If_Available_On_ny_Checkpoint_Then_Previously_Selected_OK_No_Imperfection_will_Be_Deselected() throws InterruptedException {
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.fill_SearchBar_Txt(appointmentID);
+        ActionHelper.gotoSleep(3000);
+        homeScreen.click_FirstTuple_ME();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        JarvisAssert.assertEquals(inspectionScreen.getText_Title_Lbl(), Constants.WINDSHIELD_FRONT, "title is matched  as expected " + Constants.WINDSHIELD_FRONT);
+        inspectionScreen.captureImageFromCamera();
+        inspectionScreen.check_OkNoImperfection_Chk();
+        inspectionScreen.check_First_ImperfectionType_Chk();
+        JarvisAssert.assertContains(inspectionScreen.getContentDescription_OkNoImperfection_Chk(), Constants.CHECKBOX_STATUS_UNCHECKED, "Check Status of All / No Imperfection should be Unchecked");
+
+    }
+
+    //TC 28 passed
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "28, To verify that if user select Not Applicable checkbox if Available on any checkpoint then previously selected OK / No Imperfection will be deselected ")
+    public void TC_InspectionAtYardScreen_028_To_Verify_That_If_User_Select_Not_Applicable_Checkbox_If_Available_On_ny_Checkpoint_Then_Previously_Selected_OK_No_Imperfection_will_Be_Deselected() throws InterruptedException {
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.fill_SearchBar_Txt(appointmentID);
+        ActionHelper.gotoSleep(3000);
+        homeScreen.click_FirstTuple_ME();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        JarvisAssert.assertEquals(inspectionScreen.getText_Title_Lbl(), Constants.WINDSHIELD_FRONT, "title is matched  as expected " + Constants.WINDSHIELD_FRONT);
+        inspectionScreen.captureImageFromCamera();
+        inspectionScreen.check_OkNoImperfection_Chk();
+        inspectionScreen.check_First_ImperfectionType_Chk();
+        String status = inspectionScreen.getContentDescription_OkNoImperfection_Chk().split(Constants.REGEX_SPLIT_UNDERSCORE)[2];
+        JarvisAssert.assertEquals(status, "unchecked", "Check Status of First Imperfection Type should be Unchecked");
+    }
+
+
+
+    //17/03/22
+
+    //TC 29  Absolute In Nature Case Passed
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "29,To verify that user able to select Imperfection Type which is Absolute in Nature ")
+    public void TC_InspectionAtYardScreen_029_To_Verify_That_User_Able_To_Select_Imperfection_Type_Which_s_Absolute_In_Nature() throws InterruptedException {
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.fill_SearchBar_Txt(appointmentID);
+        ActionHelper.gotoSleep(3000);
+        homeScreen.click_FirstTuple_ME();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        JarvisAssert.assertEquals(inspectionScreen.getText_Title_Lbl(), Constants.WINDSHIELD_FRONT, "title is matched  as expected " + Constants.WINDSHIELD_FRONT);
+        inspectionScreen.captureImageFromCamera();
+        inspectionScreen.check_ImperfectionType_Item("Broken");
+        JarvisAssert.assertTrue(!inspectionScreen.isPresent_NonAcceptable_RD_Btn());
+
+    }
+
+    //TC 30  Relative Case  Passed
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "30, To verify that user able to select Imperfection Type which is Relative in Nature ")
+    public void TC_InspectionAtYardScreen_30_To_Verify_That_User_Able_To_Select_Imperfection_Type_Which_Is_Relative_In_Nature() throws InterruptedException {
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.fill_SearchBar_Txt(appointmentID);
+        ActionHelper.gotoSleep(3000);
+        homeScreen.click_FirstTuple_ME();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        JarvisAssert.assertEquals(inspectionScreen.getText_Title_Lbl(), Constants.WINDSHIELD_FRONT, "title is matched  as expected " + Constants.WINDSHIELD_FRONT);
+        inspectionScreen.captureImageFromCamera();
+        inspectionScreen.check_First_ImperfectionType_Chk();
+        JarvisAssert.assertTrue(inspectionScreen.isPresent_NonAcceptable_RD_Btn());
+
+    }
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "31, To verify that user able to select Relative Acceptable Imperfection Type ")
+    public void TC_InspectionAtYardScreen_31_To_Verify_That_User_Able_To_Select_Imperfection_Type_Which_s_Relative_Acceptable_Imperfection_Type() throws InterruptedException {
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.fill_SearchBar_Txt(appointmentID);
+        ActionHelper.gotoSleep(3000);
+        homeScreen.click_FirstTuple_ME();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        JarvisAssert.assertEquals(inspectionScreen.getText_Title_Lbl(), Constants.WINDSHIELD_FRONT, "title is matched  as expected " + Constants.WINDSHIELD_FRONT);
+        inspectionScreen.captureImageFromCamera();
+        inspectionScreen.check_ImperfectionType_Item("Spots");
+        ActionHelper.scrollPageDownVerySlowly();
+        inspectionScreen.select_Acceptable_RadioButtons();
+        JarvisAssert.assertTrue(inspectionScreen.isPresent_Acceptable_RadioButton());
+    }
+
+    @Test(groups = {TestGroup.SMOKE, TestGroup.SANITY, TestGroup.INSPECTIONATYARD}, description = "32, To verify that user able to select Relative Unacceptable Imperfection Type ")
+    public void TC_InspectionAtYardScreen_32_To_Verify_That_User_Able_To_Select_Imperfection_Type_Which_s_Relative_Un_Acceptable_Imperfection_Type() throws InterruptedException {
+        CarDetailScreen carDetailScreen = new CarDetailScreen();
+        CreateAppointmentRequestDTO createAppointmentRequestDTO = InventoryManager.getInstance().createNewAppointment(Role.YARD);
+        String appointmentID = createAppointmentRequestDTO.getAppointmentId();
+        LoginScreen.getInstance().checkAndPerformLogin(Role.YARD);
+        HomeScreen homeScreen = new HomeScreen();
+        InspectionScreen inspectionScreen = new InspectionScreen();
+        homeScreen.select_ServiceCentre(Constants.AUTOMATION_SERVICE_CENTRE_YARD);
+        homeScreen.fill_SearchBar_Txt(appointmentID);
+        ActionHelper.gotoSleep(3000);
+        homeScreen.click_FirstTuple_ME();
+        carDetailScreen.click_ListItem_ME(Constants.INSPECTION_AT_YARD);
+        JarvisAssert.assertTrue(carDetailScreen.is_FullQI_RadioButton_Present(), "Full QI button is present as expected");
+        JarvisAssert.assertTrue(carDetailScreen.is_Confirm_Present(), "Confirm Button is present as expected");
+        carDetailScreen.click_FullQI_RadioButton();
+        carDetailScreen.click_Confirm_Button();
+        JarvisAssert.assertEquals(inspectionScreen.getText_Title_Lbl(), Constants.WINDSHIELD_FRONT, "title is matched  as expected " + Constants.WINDSHIELD_FRONT);
+        inspectionScreen.captureImageFromCamera();
+        inspectionScreen.check_ImperfectionType_Item("Spots");
+        ActionHelper.scrollPageDownVerySlowly();
+        inspectionScreen.select_nonAcceptable_RadioButtons();
+        JarvisAssert.assertTrue(inspectionScreen.isPresent_NonAcceptable_RadioButton());
+    }

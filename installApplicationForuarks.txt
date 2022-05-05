@@ -1,0 +1,18 @@
+1- intelli j 
+2- node js 
+3- appium server gui
+4- android studio 
+5- appium inspecture
+
+C:\Users\Lenovo\AppData\Local\Android\Sdk\platform-tools
+C:\Users\Lenovo\AppData\Local\Android\Sdk\tools
+C:\Users\Lenovo\AppData\Local\Android\Sdk\tools\bin
+
+
+
+
+  "platformName": "android",
+  "appium:noReset": true,
+  "appium:app": "C:/Users/Lenovo/Downloads/app-release.apk",
+  "uiautomator2ServerInstallTimeout": 50000
+}

@@ -1,0 +1,6 @@
+*****************     Learn Spring Core ******************
+-----------------------------------------------------------
+what is dependency injection?
+A class is depends on other class is called dependency ,
+there are two ways to achieve depency injection 
+1-by Setter method 2- by Constructer
